@@ -1,0 +1,6 @@
+<VBox>
+    <Label text="Enter Stock Symbol:"/>
+    <TextField fx:id="symbolField"/>
+    <Button text="Predict" onAction="#onPredict"/>
+    <TextArea fx:id="resultArea"/>
+</VBox>
