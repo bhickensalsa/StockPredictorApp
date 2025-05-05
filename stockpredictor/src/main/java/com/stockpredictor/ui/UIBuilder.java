@@ -21,7 +21,7 @@ public class UIBuilder {
      * @param controller The controller instance to link with UI components (e.g., button actions).
      * @return A Scene object containing the constructed UI layout.
      */
-    public static Scene build(AppController controller) {
+    public static Scene build() {
         // Create the UI components
         Label label = new Label("Enter Stock Symbol:");  // Label for user input prompt
         TextField symbolField = new TextField();  // Text field for entering the stock symbol
@@ -29,11 +29,11 @@ public class UIBuilder {
         TextArea resultArea = new TextArea();  // Area to display prediction results
         resultArea.setEditable(false);  // Make result area non-editable
 
-        // Set up the button click action: When clicked, call the controller method
-        predictButton.setOnAction(e -> controller.onPredictButtonClick(symbolField.getText()));
-
-        // Pass the UI components to the controller through the constructor
+        // Create the controller with the UI components
         AppController appController = new AppController(symbolField, resultArea);
+
+        // Set up the button click action: When clicked, call the controller method
+        predictButton.setOnAction(e -> appController.onPredictButtonClick(symbolField.getText()));
 
         // Create the layout using VBox, arranging UI elements vertically with 10px spacing
         VBox root = new VBox(10, label, symbolField, predictButton, resultArea);

@@ -41,16 +41,25 @@ public class MLService {
             os.write(input, 0, input.length);  // Write bytes to output stream
         }
 
-        // Read the response from the server
-        BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-        String inputLine;
-        StringBuilder response = new StringBuilder();
-        while ((inputLine = in.readLine()) != null) {
-            response.append(inputLine);  // Append each line of the response
+        // Check the response status code
+        int statusCode = connection.getResponseCode();
+        if (statusCode != HttpURLConnection.HTTP_OK) {
+            throw new IOException("HTTP error code: " + statusCode);
         }
-        in.close();  // Close the reader
 
-        // Return the prediction result (e.g., "Uptrend" or "Downtrend")
-        return response.toString();
+        // Read the response from the server
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()))) {
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);  // Append each line of the response
+            }
+
+            // Return the prediction result (e.g., "Uptrend" or "Downtrend")
+            return response.toString();
+        } finally {
+            // Close the connection explicitly after use
+            connection.disconnect();
+        }
     }
 }

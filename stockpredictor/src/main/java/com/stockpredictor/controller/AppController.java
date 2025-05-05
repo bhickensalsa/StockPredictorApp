@@ -20,7 +20,7 @@ public class AppController {
     private final MovingAverageService maService = new MovingAverageService();
     private final MLService mlService = new MLService();
 
-    // Removed @FXML annotation, as we're manually passing the UI components
+    // UI components
     private TextField symbolInput;
     private TextArea resultArea;
 
@@ -37,7 +37,6 @@ public class AppController {
      * Sets a default prompt in the result area.
      */
     public void initialize() {
-        // Make sure resultArea is initialized before you use it
         if (resultArea != null) {
             resultArea.setText("Enter a stock symbol and click Predict.");
         } else {
@@ -62,7 +61,7 @@ public class AppController {
 
         try {
             // Retrieve the last 250 days of historical stock prices
-            List<BigDecimal> prices = stockService.getHistoricalPricesWithRetry(symbol, 250);
+            List<BigDecimal> prices = stockService.getHistoricalPrices(symbol, 250);
 
             // Calculate the 200-day simple moving average (MA200)
             BigDecimal ma200 = maService.calculateSMA(prices, 200);
@@ -72,8 +71,12 @@ public class AppController {
 
             // Display the results in the UI
             resultArea.setText("MA200: " + ma200 + "\nPrediction: " + prediction);
+        } catch (IOException e) {
+            // Display error message in case of failure to fetch stock data
+            resultArea.setText("Error: Could not fetch stock data for symbol: " + symbol + "\n" + e.getMessage());
+            e.printStackTrace();
         } catch (Exception e) {
-            // Display error message in case of failure
+            // Display error message for any other issues
             resultArea.setText("Error: " + e.getMessage());
             e.printStackTrace();
         }
