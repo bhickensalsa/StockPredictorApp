@@ -1,6 +1,13 @@
 <VBox>
+    <!-- Label prompting user to enter a stock symbol -->
     <Label text="Enter Stock Symbol:"/>
+
+    <!-- TextField for user input, bound to controller via fx:id -->
     <TextField fx:id="symbolField"/>
+
+    <!-- Button that triggers the prediction logic in the controller -->
     <Button text="Predict" onAction="#onPredict"/>
+
+    <!-- TextArea for displaying results from the prediction -->
     <TextArea fx:id="resultArea"/>
 </VBox>

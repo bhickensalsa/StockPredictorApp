@@ -1,4 +1,9 @@
-.text-area {
-    -fx-font-family: "Consolas";
-    -fx-font-size: 14px;
+/* Style for all TextArea components:
+   Sets a monospace font and a readable font size for better code or data display */
+   .text-area {
+    -fx-font-family: 'Consolas', 'Courier New', monospace;
+    font-family: 'Consolas', 'Courier New', monospace; /* Standard CSS property */
+    
+    -fx-font-size: 14px; /* JavaFX specific font size */
+    font-size: 14px; /* Standard CSS property for compatibility */
 }
