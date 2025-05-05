@@ -14,6 +14,8 @@ import yahoofinance.YahooFinance;
  * This class uses the Yahoo Finance API to fetch historical stock prices.
  */
 public class StockService {
+    private static final int MAX_RETRIES = 2;
+    private static final long BACKOFF_TIME = 2000; // 2 seconds
 
     /**
      * Retrieves historical closing prices for a given stock symbol.
@@ -39,5 +41,29 @@ public class StockService {
 
         // Return the list of closing prices
         return closingPrices;
+    }
+
+    public List<BigDecimal> getHistoricalPricesWithRetry(String symbol, int days) {
+        int retries = 0;
+        while (retries < MAX_RETRIES) {
+            try {
+                // Try fetching stock prices
+                return getHistoricalPrices(symbol, days);
+            } catch (IOException e) {
+                if (e.getMessage().contains("HTTP response code: 429")) {
+                    // Wait before retrying if rate limit is hit
+                    retries++;
+                    try {
+                        System.out.println("Rate limit hit, retrying in " + BACKOFF_TIME + " ms...");
+                        Thread.sleep(BACKOFF_TIME * retries);  // Exponential backoff
+                    } catch (InterruptedException ie) {
+                        ie.printStackTrace();
+                    }
+                } else {
+                    throw new RuntimeException("Failed to fetch data from API: " + e.getMessage(), e);
+                }
+            }
+        }
+        throw new RuntimeException("Max retries reached, still unable to fetch data.");
     }
 }

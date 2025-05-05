@@ -32,6 +32,9 @@ public class UIBuilder {
         // Set up the button click action: When clicked, call the controller method
         predictButton.setOnAction(e -> controller.onPredictButtonClick(symbolField.getText()));
 
+        // Pass the UI components to the controller through the constructor
+        AppController appController = new AppController(symbolField, resultArea);
+
         // Create the layout using VBox, arranging UI elements vertically with 10px spacing
         VBox root = new VBox(10, label, symbolField, predictButton, resultArea);
 

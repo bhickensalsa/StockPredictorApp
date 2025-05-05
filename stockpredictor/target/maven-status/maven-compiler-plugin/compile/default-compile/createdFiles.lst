@@ -1,6 +1,0 @@
-com\stockpredictor\service\StockService.class
-com\stockpredictor\service\MLService.class
-com\stockpredictor\ui\UIBuilder.class
-com\stockpredictor\Main.class
-com\stockpredictor\controller\AppController.class
-com\stockpredictor\service\MovingAverageService.class

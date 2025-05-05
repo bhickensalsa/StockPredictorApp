@@ -3,10 +3,10 @@ package com.stockpredictor.controller;
 import com.stockpredictor.service.MLService;
 import com.stockpredictor.service.MovingAverageService;
 import com.stockpredictor.service.StockService;
-import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -20,28 +20,29 @@ public class AppController {
     private final MovingAverageService maService = new MovingAverageService();
     private final MLService mlService = new MLService();
 
-    /**
-     * Text field for user to input the stock symbol.
-     * Must be linked to the corresponding fx:id in the FXML.
-     */
-    @FXML
+    // Removed @FXML annotation, as we're manually passing the UI components
     private TextField symbolInput;
-
-    /**
-     * Text area for displaying prediction results.
-     * Must be linked to the corresponding fx:id in the FXML.
-     */
-    @FXML
     private TextArea resultArea;
 
     /**
+     * This constructor takes in the UI components and links them to the controller.
+     */
+    public AppController(TextField symbolInput, TextArea resultArea) {
+        this.symbolInput = symbolInput;
+        this.resultArea = resultArea;
+    }
+
+    /**
      * Initializes the controller.
-     * This method is automatically called after the FXML file is loaded.
      * Sets a default prompt in the result area.
      */
-    @FXML
     public void initialize() {
-        resultArea.setText("Enter a stock symbol and click Predict.");
+        // Make sure resultArea is initialized before you use it
+        if (resultArea != null) {
+            resultArea.setText("Enter a stock symbol and click Predict.");
+        } else {
+            System.out.println("resultArea is not initialized!");
+        }
     }
 
     /**
@@ -51,7 +52,6 @@ public class AppController {
      *
      * @param string The stock symbol entered by the user.
      */
-    @FXML
     public void onPredictButtonClick(String string) {
         String symbol = string.trim();
 
@@ -62,7 +62,7 @@ public class AppController {
 
         try {
             // Retrieve the last 250 days of historical stock prices
-            List<BigDecimal> prices = stockService.getHistoricalPrices(symbol, 250);
+            List<BigDecimal> prices = stockService.getHistoricalPricesWithRetry(symbol, 250);
 
             // Calculate the 200-day simple moving average (MA200)
             BigDecimal ma200 = maService.calculateSMA(prices, 200);

@@ -5,11 +5,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import com.stockpredictor.controller.AppController;
 import com.stockpredictor.ui.UIBuilder;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 
-/**
- * The main entry point for the Stock Predictor application.
- * This class launches the JavaFX application and sets up the initial UI.
- */
 public class Main extends Application {
 
     /**
@@ -20,8 +18,13 @@ public class Main extends Application {
      */
     @Override
     public void start(Stage stage) {
-        // Create the controller for the application logic
-        AppController controller = new AppController();
+        // Create the UI components first
+        TextField symbolField = new TextField();  // Text field for entering the stock symbol
+        TextArea resultArea = new TextArea();  // Area to display prediction results
+        resultArea.setEditable(false);  // Make result area non-editable
+
+        // Now create the controller, passing the necessary components
+        AppController controller = new AppController(symbolField, resultArea);
 
         // Build the UI using the UIBuilder, passing the controller to link the UI and logic
         Scene scene = UIBuilder.build(controller);
